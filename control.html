@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>The Case — Control Panel</title><link rel="stylesheet" href="control.css"></head>
+<body>
+<header class="masthead"><div><p class="kicker">The Case / facilitator tools</p><h1>Control panel</h1><p class="control-hint">Scroll sideways to reach all controls →</p></div><div class="header-tools"><div class="zoom-control" aria-label="Control panel zoom"><span>Panel zoom</span><button class="zoom-button" data-local="zoom-out" aria-label="Zoom control panel out">−</button><output id="zoom-value" aria-live="polite">100%</output><button class="zoom-button" data-local="zoom-in" aria-label="Zoom control panel in">+</button><button class="zoom-button zoom-reset" data-local="zoom-reset">Reset</button></div><a class="script-link" href="Lesson-script-Nov-12.pdf" target="_blank" rel="noopener">Lesson script ↗</a><div id="connection" class="connection" role="status">Connecting to display…</div></div></header>
+<main>
+<section class="hero" aria-labelledby="current-title"><div class="hero-top"><div><p class="kicker">On the display <span id="beat-number">—</span></p><h2 id="current-title">Waiting for the display</h2><p id="current-meta" class="muted">Open index.html in another window using the same local server.</p></div><div class="timer-large"><span>Timer</span><strong id="clock">--:--</strong></div></div>
+<div class="nav-actions"><button id="previous" class="button" data-action="previous">← Previous beat</button><button id="next" class="button primary" data-action="next">Next beat →</button></div><p id="next-up" class="subtle">21 lesson beats plus the spreadsheet scene.</p></section>
+<section class="card team-card" aria-labelledby="score-heading"><div class="score-head"><div><p class="kicker">Manual scoring</p><h2 id="score-heading">Team points</h2><p class="subtle">Use + / − for one point, or enter a total and press Enter.</p></div><button id="sidebar-toggle" class="button" data-action="sidebar">Hide sidebar</button></div><div id="score-controls" class="score-grid"></div></section>
+<div class="grid"><section class="card" aria-labelledby="vote-heading"><div class="card-header"><p class="kicker">Room input</p><h2 id="vote-heading">Vote controls</h2></div><div id="vote-content"><p class="muted">Voting controls appear when the display reaches a vote.</p></div></section>
+<section class="card" aria-labelledby="timer-heading"><div class="card-header"><p class="kicker">Run of show</p><h2 id="timer-heading">Timer</h2></div><div class="row"><button id="timer-toggle" class="button" data-action="timer-toggle">Start timer</button><button class="button" data-action="timer-reset">Reset</button></div><div class="row timer-presets"><button class="button" data-timer-preset="2">Vote · 2:00</button><button class="button" data-timer-preset="4">Presentation · 4:00</button><button class="button" data-timer-preset="5">5:00</button></div><form id="timer-form"><label for="minutes">Set length (minutes)</label><div class="input-row"><input id="minutes" type="number" min="1" max="180" value="5" required><button class="button" type="submit">Set time</button></div></form><p class="subtle">The timer never advances a beat automatically.</p></section>
+<section class="card" aria-labelledby="presentation-heading"><div class="card-header"><p class="kicker">Presentations</p><h2 id="presentation-heading">Case tools</h2></div><div id="case-actions"></div><label for="case-select">Place a presentation at this beat</label><div class="input-row"><select id="case-select" aria-label="Presentation to place"></select><button id="place" class="button">Place</button></div><p class="subtle">Placing a case opens its case file; it does not change the story path.</p><div class="row"><button id="remove-placement" class="button" data-action="remove-placement">Remove placement</button><button id="flags" class="button">Show reference flags</button></div></section>
+<section class="card" aria-labelledby="navigate-heading"><div class="card-header"><p class="kicker">Facilitator navigation</p><h2 id="navigate-heading">Revisit a beat</h2></div><label for="jump-select">Previously reached beats</label><div class="input-row"><select id="jump-select" aria-label="Previously reached beat"></select><button id="jump" class="button">Go to beat</button></div><div id="video-controls" hidden><p id="video-message" class="subtle" role="status">The YouTube embed is controlled on the display. These buttons control a loaded local video or direct MP4/WebM URL.</p><div class="row"><button class="button" data-action="video-play">Play video</button><button class="button" data-action="video-pause">Pause video</button></div></div><p class="subtle">The display remains the source of truth. Use one display window and one control panel in the same browser.</p></section></div>
+<!-- ====================  URL‑Embed Section (THE REAL ANSWER) ==================== -->
+<div id="real‑answer‑embed‑wrapper" class="real-answer-embed">
+  <h2>THE REAL ANSWER: Still Open</h2>
+
+  <!-- Optional short description / instructions -->
+  <p>
+    Paste a URL below to embed external content (video, interactive map,
+    presentation, etc.) directly into the lesson.
+  </p>
+
+  <!-- Input + button -->
+  <div class="embed‑control">
+    <input
+      type="text"
+      id="embed‑url‑input"
+      placeholder="https://example.com/your‑embed‑link"
+      aria-label="URL to embed"
+    />
+    <button id="embed‑url‑button">Embed</button>
+  </div>
+
+  <!-- Where the iframe will appear -->
+  <div id="embed‑output‑container" class="embed-output"></div>
+</div>
+<script>
+  // Helper: simple validation that the string looks like a URL
+  function isValidUrl(str) {
+    try {
+      // The URL constructor will throw on malformed URLs
+      new URL(str);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  document.getElementById('embed‑url‑button').addEventListener('click', function () {
+    const urlInput = document.getElementById('embed‑url‑input');
+    const output   = document.getElementById('embed‑output‑container');
+    const url      = urlInput.value.trim();
+
+    // Clear any previous embed
+    output.innerHTML = '';
+
+    if (!url) {
+      alert('Please paste a URL.');
+      return;
+    }
+
+    if (!isValidUrl(url)) {
+      alert('That does not appear to be a valid URL.');
+      return;
+    }
+
+    // Build the iframe
+    const iframe = document.createElement('iframe');
+    iframe.src = url;
+    iframe.setAttribute('allowfullscreen', '');
+    iframe.style.width = '100%';
+    iframe.style.height = '400px';
+    iframe.style.border = '0';
+
+    // Insert it
+    output.appendChild(iframe);
+  });
+</script>
+</main><script src="config.js"></script><script src="control.js"></script></body></html>
